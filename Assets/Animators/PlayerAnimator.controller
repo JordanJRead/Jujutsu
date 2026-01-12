@@ -82,7 +82,7 @@ BlendTree:
   m_Name: Run Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -4351063749293926034, guid: d378a23360b44e8489f16309c1b95b72, type: 3}
+    m_Motion: {fileID: -4351063749293926034, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -90,7 +90,7 @@ BlendTree:
     m_DirectBlendParameter: Speed
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 5522812681064789136, guid: d378a23360b44e8489f16309c1b95b72, type: 3}
+    m_Motion: {fileID: 5522812681064789136, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
     m_Threshold: 0.5
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -98,7 +98,7 @@ BlendTree:
     m_DirectBlendParameter: Speed
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 6273404402075134392, guid: d378a23360b44e8489f16309c1b95b72, type: 3}
+    m_Motion: {fileID: 6273404402075134392, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -182,7 +182,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 2353680664591731088, guid: d378a23360b44e8489f16309c1b95b72, type: 3}
+  m_Motion: {fileID: 2353680664591731088, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -236,18 +236,6 @@ AnimatorController:
     m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
-    m_Name: Hands
-    m_StateMachine: {fileID: -8950442385890073460}
-    m_Mask: {fileID: 31900000, guid: eb52f6c2d1646ae4b831be388f254a4b, type: 2}
-    m_Motions: []
-    m_Behaviours: []
-    m_BlendingMode: 0
-    m_SyncedLayerIndex: -1
-    m_DefaultWeight: 0
-    m_IKPass: 0
-    m_SyncedLayerAffectsTiming: 0
-    m_Controller: {fileID: 9100000}
-  - serializedVersion: 5
     m_Name: Movement
     m_StateMachine: {fileID: -4300763804094629146}
     m_Mask: {fileID: 0}
@@ -255,7 +243,19 @@ AnimatorController:
     m_Behaviours: []
     m_BlendingMode: 0
     m_SyncedLayerIndex: -1
-    m_DefaultWeight: 0
+    m_DefaultWeight: 1
+    m_IKPass: 0
+    m_SyncedLayerAffectsTiming: 0
+    m_Controller: {fileID: 9100000}
+  - serializedVersion: 5
+    m_Name: Hands
+    m_StateMachine: {fileID: -8950442385890073460}
+    m_Mask: {fileID: 31900000, guid: eb52f6c2d1646ae4b831be388f254a4b, type: 2}
+    m_Motions: []
+    m_Behaviours: []
+    m_BlendingMode: 0
+    m_SyncedLayerIndex: -1
+    m_DefaultWeight: 1
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
@@ -268,7 +268,7 @@ BlendTree:
   m_Name: Walk Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 7397366611569366902, guid: d378a23360b44e8489f16309c1b95b72, type: 3}
+    m_Motion: {fileID: 7397366611569366902, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -276,7 +276,7 @@ BlendTree:
     m_DirectBlendParameter: Speed
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 2667949614841947897, guid: d378a23360b44e8489f16309c1b95b72, type: 3}
+    m_Motion: {fileID: 2667949614841947897, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
     m_Threshold: 0.5
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -284,7 +284,7 @@ BlendTree:
     m_DirectBlendParameter: Speed
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 6086689474689422080, guid: d378a23360b44e8489f16309c1b95b72, type: 3}
+    m_Motion: {fileID: 6086689474689422080, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -307,7 +307,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -3100369314251171874, guid: d378a23360b44e8489f16309c1b95b72, type: 3}
+    m_Motion: {fileID: -3100369314251171874, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
