@@ -26,6 +26,13 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (animator.GetBool("IsStunned"))
+        {
+            animator.SetFloat("Speed", 0);
+            animator.SetFloat("LeftRight", 0.5f);
+            return;
+        }
+
         float targetSpeed = 0;
         Vector3 moveDirection = Vector3.zero;
         Vector3 localMoveDirection = Vector3.zero;
