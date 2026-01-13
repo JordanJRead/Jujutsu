@@ -22,8 +22,9 @@ public class AnimHandsPunch : StateMachineBehaviour
     {
         if (hitboxTimer.Update(Time.deltaTime))
         {
-            Instantiate(HitboxPrefab, animator.gameObject.transform.Find("PunchHitboxLocation"));
-            Hitbox hitbox = HitboxPrefab.GetComponent<Hitbox>();
+            GameObject hitboxObject = Instantiate(HitboxPrefab, animator.gameObject.transform.Find("PunchHitboxLocation"));
+            hitboxObject.transform.localPosition = Vector3.zero;
+            Hitbox hitbox = hitboxObject.GetComponent<Hitbox>();
             hitbox.Instantiate(HitboxLifespan, HitboxStunDuration, animator.gameObject);
         }
     }
