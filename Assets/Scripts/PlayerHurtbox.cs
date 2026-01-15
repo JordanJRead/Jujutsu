@@ -30,7 +30,7 @@ public class Hurtbox : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         Hitbox hitbox;
-        if (_invincibilityTimer.IsDone() && other.TryGetComponent(out hitbox) && hitbox.Owner != gameObject)
+        if (_invincibilityTimer.IsDone() && _stunTimer.IsDone() && other.TryGetComponent(out hitbox) && hitbox.Owner != gameObject)
         {
             if (_animator.GetBool("IsBlocking"))
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http.Headers;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.Assertions.Must;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -10,13 +11,19 @@ public class PlayerMove : MonoBehaviour
     public float RunSpeed;
     public float MoveAcceleration;
     public float TurnAcceleration;
+    public float JumpStrength;
 
-    float _currSpeed;
-    float _smoothSpeedVelocity;
-
-    float _currLR;
-    float _smoothLRVelocity;
+    // Animator
     Animator _animator;
+    SmoothFloat _smoothLR;
+    SmoothFloat _smoothSpeed;
+    SmoothVector _smoothMoveDirection;
+    bool _isRunning = true;
+
+    // Physics
+    public float Gravity;
+    CharacterController _characterController;
+    float _yVelocity = 0;
 
     PhotonView _view;
     public KeyboardState keyboardState = new KeyboardState();
@@ -24,14 +31,71 @@ public class PlayerMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _smoothMoveDirection = new SmoothVector(Vector3.zero, MoveAcceleration);
+        _smoothLR = new SmoothFloat(0.5f, TurnAcceleration);
+        _smoothSpeed = new SmoothFloat(0, MoveAcceleration);
         _animator = GetComponent<Animator>();
         _view = GetComponent<PhotonView>();
+        _characterController = GetComponent<CharacterController>();
         if (_view.IsMine)
         {
             transform.Find("Camera").GetComponent<Camera>().enabled = true;
             transform.Find("Camera").GetComponent<AudioListener>().enabled = true;
             transform.Find("Camera").GetComponent<PlayerCamera>().enabled = true;
         }
+    }
+
+    void UpdateKeyboardState()
+    {
+
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            keyboardState.LeftClick = true;
+        }
+        else
+        {
+            keyboardState.LeftClick = false;
+        }
+
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            keyboardState.RightClick = true;
+        }
+        else
+        {
+            keyboardState.RightClick = false;
+        }
+    }
+
+    (Vector3, Vector3) GetTargetAndLocalMoveDirection()
+    {
+        Vector3 targetMoveDirection = Vector3.zero;
+        Vector3 localMoveDirection = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            targetMoveDirection += transform.forward;
+            localMoveDirection += Vector3.forward;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            targetMoveDirection -= transform.forward;
+            localMoveDirection -= Vector3.forward;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            targetMoveDirection += transform.right;
+            localMoveDirection += Vector3.right;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            targetMoveDirection -= transform.right;
+            localMoveDirection -= Vector3.right;
+        }
+        targetMoveDirection.Normalize();
+        localMoveDirection.Normalize();
+
+        return (targetMoveDirection, localMoveDirection);
     }
 
     // Update is called once per frame
@@ -47,65 +111,49 @@ public class PlayerMove : MonoBehaviour
         // Input
         if (_view.IsMine)
         {
+            // Input direction
+            UpdateKeyboardState();
+            var (targetMoveDirection, localMoveDirection) = GetTargetAndLocalMoveDirection();
+            _smoothMoveDirection.Update(targetMoveDirection);
+            _smoothLR.Update(localMoveDirection.x / 2 + 0.5f);
+
+            // Gravity
+            _yVelocity += Gravity * Time.deltaTime;
+            if (_characterController.isGrounded)
+            {
+                _yVelocity = -0.2f;
+            }
+
+            // Move speed
+            if (Input.GetKeyDown(KeyCode.Comma))
+            {
+                _isRunning = !_isRunning;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space) && _characterController.isGrounded)
+            {
+                _yVelocity = JumpStrength;
+                _animator.SetBool("Jump", true);
+            }
+
             float targetSpeed = 0;
-            Vector3 moveDirection = Vector3.zero;
-            Vector3 localMoveDirection = Vector3.zero;
+            if (targetMoveDirection.magnitude > 0)
+            {
+                targetSpeed = _isRunning ? RunSpeed : WalkSpeed;
+            }
+            _smoothSpeed.Update(targetSpeed);
+            float speed = _smoothMoveDirection.GetCurrent().magnitude * _smoothSpeed.GetCurrent();
 
-            if (Input.GetKey(KeyCode.W))
-            {
-                moveDirection += transform.forward;
-                localMoveDirection += Vector3.forward;
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                moveDirection -= transform.forward;
-                localMoveDirection -= Vector3.forward;
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                moveDirection += transform.right;
-                localMoveDirection += Vector3.right;
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                moveDirection -= transform.right;
-                localMoveDirection -= Vector3.right;
-            }
+            // Final velocity
+            Vector3 velocity = _smoothMoveDirection.GetCurrent() * speed + Vector3.up * _yVelocity;
 
-            if (Input.GetKey(KeyCode.Mouse0))
-            {
-                keyboardState.LeftClick = true;
-            }
-            else
-            {
-                keyboardState.LeftClick = false;
-            }
+            _characterController.Move(velocity * Time.deltaTime);
+            speed = new Vector2(_characterController.velocity.x, _characterController.velocity.z).magnitude;
 
-            if (Input.GetKey(KeyCode.Mouse1))
-            {
-                keyboardState.RightClick = true;
-            }
-            else
-            {
-                keyboardState.RightClick = false;
-            }
-
-            if (moveDirection.magnitude > 0)
-            {
-                moveDirection.Normalize();
-                localMoveDirection.Normalize();
-                if (Input.GetKey(KeyCode.LeftShift))
-                    targetSpeed = RunSpeed;
-                else
-                    targetSpeed = WalkSpeed;
-            }
-
-            _currSpeed = Mathf.SmoothDamp(_currSpeed, targetSpeed, ref _smoothSpeedVelocity, MoveAcceleration);
-            _currLR = Mathf.SmoothDamp(_currLR, localMoveDirection.x / 2 + 0.5f, ref _smoothLRVelocity, TurnAcceleration);
-
-            _animator.SetFloat("Speed", _currSpeed < WalkSpeed ? (_currSpeed / WalkSpeed / 2) : ((_currSpeed - WalkSpeed) / (RunSpeed - WalkSpeed) / 2 + 0.5f));
-            _animator.SetFloat("LeftRight", _currLR);
-            transform.position += moveDirection * _currSpeed * Time.deltaTime;
+            // Animator values
+            _animator.SetFloat("Speed", speed < WalkSpeed ? (speed / WalkSpeed / 2) : ((speed - WalkSpeed) / (RunSpeed - WalkSpeed) / 2 + 0.5f));
+            _animator.SetFloat("LeftRight", _smoothLR.GetCurrent());
+            _animator.SetBool("IsGrounded", _characterController.isGrounded);
         }
     }
 }
