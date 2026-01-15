@@ -269,6 +269,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6721008447941370536}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7316961336478459975}
   m_SourcePrefab: {fileID: 100100000, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}
 --- !u!1 &371329929196653748 stripped
 GameObject:
@@ -349,6 +352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InvincibleDuration: 0.3
+  ParryInvincibleDuration: 0.7
 --- !u!54 &8211666624548909015
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -463,11 +467,29 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 2
     Name: IsStunned
+  - Type: 9
+    SynchronizeType: 0
+    Name: Parry
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
   - SynchronizeType: 2
     LayerIndex: 1
+--- !u!114 &7316961336478459975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 371329929196653748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c84d6c0a9c447e34486786b0ecfe4803, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HitboxPrefab: {fileID: 3062689983579521066, guid: 12889486b896d884cb9c8d6615a8e18b, type: 3}
+  HitboxLifespan: 0.1
+  HitboxStunDuration: 1
 --- !u!4 &1039463135801284110 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b25ccc2bda316df4189ca283b6088b67, type: 3}

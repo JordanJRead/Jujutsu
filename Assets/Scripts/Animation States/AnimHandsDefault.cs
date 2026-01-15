@@ -9,6 +9,8 @@ public class AnimHandsDefault : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         playerMove = animator.gameObject.GetComponent<PlayerMove>();
+        animator.SetBool("Parry", false);
+        animator.SetBool("IsBlocking", false);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
