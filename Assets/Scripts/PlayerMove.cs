@@ -11,12 +11,14 @@ public class PlayerMove : MonoBehaviour
     public float RunSpeed;
     public float MoveAcceleration;
     public float TurnAcceleration;
+    public float AirGroundAcceleration;
     public float JumpStrength;
 
     // Animator
     Animator _animator;
     SmoothFloat _smoothLR;
     SmoothFloat _smoothSpeed;
+    SmoothFloat _smoothGround;
     SmoothVector _smoothMoveDirection;
     bool _isRunning = true;
 
@@ -34,6 +36,7 @@ public class PlayerMove : MonoBehaviour
         _smoothMoveDirection = new SmoothVector(Vector3.zero, MoveAcceleration);
         _smoothLR = new SmoothFloat(0.5f, TurnAcceleration);
         _smoothSpeed = new SmoothFloat(0, MoveAcceleration);
+        _smoothGround = new SmoothFloat(0, AirGroundAcceleration);
         _animator = GetComponent<Animator>();
         _view = GetComponent<PhotonView>();
         _characterController = GetComponent<CharacterController>();
@@ -151,9 +154,10 @@ public class PlayerMove : MonoBehaviour
             speed = new Vector2(_characterController.velocity.x, _characterController.velocity.z).magnitude;
 
             // Animator values
+            _smoothGround.Update(_characterController.isGrounded ? 1 : 0);
             _animator.SetFloat("Speed", speed < WalkSpeed ? (speed / WalkSpeed / 2) : ((speed - WalkSpeed) / (RunSpeed - WalkSpeed) / 2 + 0.5f));
             _animator.SetFloat("LeftRight", _smoothLR.GetCurrent());
-            _animator.SetBool("IsGrounded", _characterController.isGrounded);
+            _animator.SetFloat("Ground", _smoothGround.GetCurrent());
         }
     }
 }

@@ -319,6 +319,7 @@ MonoBehaviour:
   RunSpeed: 7
   MoveAcceleration: 0.1
   TurnAcceleration: 0.1
+  AirGroundAcceleration: 0.1
   JumpStrength: 5
   Gravity: -12
 --- !u!136 &7702115389370023847
@@ -477,10 +478,10 @@ MonoBehaviour:
     Name: Parry
   - Type: 4
     SynchronizeType: 0
-    Name: IsGrounded
-  - Type: 4
-    SynchronizeType: 0
     Name: Jump
+  - Type: 1
+    SynchronizeType: 0
+    Name: Ground
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
