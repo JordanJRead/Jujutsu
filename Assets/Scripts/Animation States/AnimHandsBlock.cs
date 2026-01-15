@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class AnimHandsBlock : StateMachineBehaviour
 {
-    PlayerMove playerMove;
+    public float BlockDuration;
+    Timer _blockTimer = new Timer();
+    
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        playerMove = animator.gameObject.GetComponent<PlayerMove>();
+        _blockTimer.ResetTime(BlockDuration);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (!playerMove.keyboardState.RightClick)
+        if (_blockTimer.Update(Time.deltaTime))
         {
             animator.SetBool("IsBlocking", false);
         }
