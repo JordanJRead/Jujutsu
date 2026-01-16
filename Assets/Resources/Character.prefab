@@ -323,7 +323,7 @@ MonoBehaviour:
   JumpStrength: 5
   DashDuration: 0.2
   DashSpeed: 20
-  DashAcceleration: 0.2
+  DashAcceleration: 0.1
   DashCooldown: 3
   Gravity: -12
 --- !u!136 &7702115389370023847

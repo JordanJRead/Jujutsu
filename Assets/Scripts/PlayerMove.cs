@@ -21,6 +21,7 @@ public class PlayerMove : MonoBehaviour
     // Animator
     Animator _animator;
     SmoothFloat _smoothLR;
+    SmoothFloat _smoothFB;
     SmoothFloat _smoothSpeed;
     SmoothFloat _smoothGround;
     SmoothVector _smoothMoveDirection;
@@ -46,6 +47,7 @@ public class PlayerMove : MonoBehaviour
         _smoothDashSpeed = new SmoothFloat(0, DashAcceleration);
         _smoothMoveDirection = new SmoothVector(Vector3.zero, MoveAcceleration);
         _smoothLR = new SmoothFloat(0.5f, TurnAcceleration);
+        _smoothFB = new SmoothFloat(0.5f, TurnAcceleration);
         _smoothSpeed = new SmoothFloat(0, MoveAcceleration);
         _smoothGround = new SmoothFloat(0, AirGroundAcceleration);
         _animator = GetComponent<Animator>();
@@ -124,6 +126,7 @@ public class PlayerMove : MonoBehaviour
         {
             _animator.SetFloat("Speed", 0);
             _animator.SetFloat("LeftRight", 0.5f);
+            _animator.SetFloat("ForwardBackward", 0.5f);
             return;
         }
 
@@ -135,6 +138,7 @@ public class PlayerMove : MonoBehaviour
             var (targetMoveDirection, localMoveDirection) = GetTargetAndLocalMoveDirection();
             _smoothMoveDirection.Update(targetMoveDirection);
             _smoothLR.Update(localMoveDirection.x);
+            _smoothFB.Update(localMoveDirection.z);
 
             // Gravity
             _yVelocity += Gravity * Time.deltaTime;
@@ -154,15 +158,11 @@ public class PlayerMove : MonoBehaviour
             {
                 _animator.SetBool("IsDashing", true);
                 _animator.SetFloat("DashLeftRight", localMoveDirection.x);
-                _animator.SetFloat("DashForwardBackwards", localMoveDirection.z);
+                _animator.SetFloat("DashForwardBackward", localMoveDirection.z);
                 _localDashDirection = localMoveDirection;
                 _dashTimer.ResetTime(DashDuration);
             }
-
-            if (isDashing)
-            {
-                _smoothDashSpeed.Update(DashSpeed);
-            }
+            _smoothDashSpeed.Update(isDashing ? DashSpeed : 0);
 
             // End dashing
             if (_dashTimer.Update(Time.deltaTime))
@@ -202,6 +202,7 @@ public class PlayerMove : MonoBehaviour
             _smoothGround.Update(_characterController.isGrounded ? 1 : 0);
             _animator.SetFloat("Speed", speed < WalkSpeed ? (speed / WalkSpeed / 2) : ((speed - WalkSpeed) / (RunSpeed - WalkSpeed) / 2 + 0.5f));
             _animator.SetFloat("LeftRight", _smoothLR.GetCurrent());
+            _animator.SetFloat("ForwardBackward", _smoothFB.GetCurrent());
             _animator.SetFloat("Ground", _smoothGround.GetCurrent());
         }
     }
