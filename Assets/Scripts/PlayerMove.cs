@@ -13,6 +13,10 @@ public class PlayerMove : MonoBehaviour
     public float TurnAcceleration;
     public float AirGroundAcceleration;
     public float JumpStrength;
+    public float DashDuration;
+    public float DashSpeed;
+    public float DashAcceleration;
+    public float DashCooldown;
 
     // Animator
     Animator _animator;
@@ -21,6 +25,12 @@ public class PlayerMove : MonoBehaviour
     SmoothFloat _smoothGround;
     SmoothVector _smoothMoveDirection;
     bool _isRunning = true;
+
+    // Dashing
+    Timer _dashTimer = new Timer();
+    Timer _dashCooldownTimer = new Timer();
+    Vector3 _localDashDirection = Vector3.zero;
+    SmoothFloat _smoothDashSpeed;
 
     // Physics
     public float Gravity;
@@ -33,6 +43,7 @@ public class PlayerMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _smoothDashSpeed = new SmoothFloat(0, DashAcceleration);
         _smoothMoveDirection = new SmoothVector(Vector3.zero, MoveAcceleration);
         _smoothLR = new SmoothFloat(0.5f, TurnAcceleration);
         _smoothSpeed = new SmoothFloat(0, MoveAcceleration);
@@ -101,6 +112,11 @@ public class PlayerMove : MonoBehaviour
         return (targetMoveDirection, localMoveDirection);
     }
 
+    Vector3 LocalMoveToWorld(Vector3 local)
+    {
+        return transform.localToWorldMatrix * new Vector4(local.x , local.y, local.z, 0);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -118,13 +134,42 @@ public class PlayerMove : MonoBehaviour
             UpdateKeyboardState();
             var (targetMoveDirection, localMoveDirection) = GetTargetAndLocalMoveDirection();
             _smoothMoveDirection.Update(targetMoveDirection);
-            _smoothLR.Update(localMoveDirection.x / 2 + 0.5f);
+            _smoothLR.Update(localMoveDirection.x);
 
             // Gravity
             _yVelocity += Gravity * Time.deltaTime;
             if (_characterController.isGrounded)
             {
                 _yVelocity = -0.2f;
+            }
+
+            float dashLeftRight = _animator.GetFloat("DashLeftRight");
+
+            // Dashing
+            _dashCooldownTimer.Update(Time.deltaTime);
+            bool isDashing = !_dashTimer.IsDone();
+
+            // Start dashing
+            if (_dashCooldownTimer.IsDone() && Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && targetMoveDirection.magnitude != 0)
+            {
+                _animator.SetBool("IsDashing", true);
+                _animator.SetFloat("DashLeftRight", localMoveDirection.x);
+                _animator.SetFloat("DashForwardBackwards", localMoveDirection.z);
+                _localDashDirection = localMoveDirection;
+                _dashTimer.ResetTime(DashDuration);
+            }
+
+            if (isDashing)
+            {
+                _smoothDashSpeed.Update(DashSpeed);
+            }
+
+            // End dashing
+            if (_dashTimer.Update(Time.deltaTime))
+            {
+                _animator.SetBool("IsDashing", false);
+                _localDashDirection = Vector3.zero;
+                _dashCooldownTimer.ResetTime(DashCooldown);
             }
 
             // Move speed
@@ -148,7 +193,7 @@ public class PlayerMove : MonoBehaviour
             float speed = _smoothMoveDirection.GetCurrent().magnitude * _smoothSpeed.GetCurrent();
 
             // Final velocity
-            Vector3 velocity = _smoothMoveDirection.GetCurrent() * speed + Vector3.up * _yVelocity;
+            Vector3 velocity = _smoothMoveDirection.GetCurrent() * speed + Vector3.up * _yVelocity + LocalMoveToWorld(_localDashDirection) * _smoothDashSpeed.GetCurrent();
 
             _characterController.Move(velocity * Time.deltaTime);
             speed = new Vector2(_characterController.velocity.x, _characterController.velocity.z).magnitude;

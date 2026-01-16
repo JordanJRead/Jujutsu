@@ -321,6 +321,10 @@ MonoBehaviour:
   TurnAcceleration: 0.1
   AirGroundAcceleration: 0.1
   JumpStrength: 5
+  DashDuration: 0.2
+  DashSpeed: 20
+  DashAcceleration: 0.2
+  DashCooldown: 3
   Gravity: -12
 --- !u!136 &7702115389370023847
 CapsuleCollider:
@@ -482,6 +486,15 @@ MonoBehaviour:
   - Type: 1
     SynchronizeType: 0
     Name: Ground
+  - Type: 4
+    SynchronizeType: 0
+    Name: IsDashing
+  - Type: 1
+    SynchronizeType: 0
+    Name: DashLeftRight
+  - Type: 1
+    SynchronizeType: 0
+    Name: DashForwardBackwards
   m_SynchronizeLayers:
   - SynchronizeType: 2
     LayerIndex: 0
