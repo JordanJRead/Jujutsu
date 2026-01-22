@@ -7,10 +7,12 @@ using UnityEngine;
 public class Timer
 {
     [SerializeField] private float _currentTime;
+    private float _startTime;
 
     public Timer(float startTime = 0)
     {
         _currentTime = startTime;
+        _startTime = startTime;
     }
 
     /// <summary>
@@ -29,7 +31,9 @@ public class Timer
     public void ResetTime(float time)
     {
         _currentTime = time;
+        _startTime = time;
     }
 
     public bool IsDone() { return _currentTime == 0; }
+    public float GetT() { return (_startTime - _currentTime) / _startTime; }
 }

@@ -18,6 +18,8 @@ public class PlayerMove : MonoBehaviour
     public float DashAcceleration;
     public float DashCooldown;
 
+    public GameObject domainShellPrefab;
+
     // Animator
     Animator _animator;
     SmoothFloat _smoothLR;
@@ -87,6 +89,11 @@ public class PlayerMove : MonoBehaviour
     {
         Vector3 targetMoveDirection = Vector3.zero;
         Vector3 localMoveDirection = Vector3.zero;
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Instantiate(domainShellPrefab, null, true);
+        }
 
         if (Input.GetKey(KeyCode.W))
         {

@@ -1,4 +1,4 @@
-Shader "Unlit/Domain"
+Shader "Unlit/DomainShell"
 {
     Properties
     {

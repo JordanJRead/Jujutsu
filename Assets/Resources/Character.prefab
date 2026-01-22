@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 5654066117435401144}
   - component: {fileID: 9000434892033734178}
   - component: {fileID: 7452793917166930063}
+  - component: {fileID: 8033962988356869360}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -172,6 +173,15 @@ MonoBehaviour:
   photonView: {fileID: 8138843037484679703}
   Sensitivity: 2
   DistanceFromPlayer: 5
+--- !u!45 &8033962988356869360
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6893954241650063794}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 0}
 --- !u!1 &8167976313205207183
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,6 +447,7 @@ MonoBehaviour:
   DashSpeed: 20
   DashAcceleration: 0.1
   DashCooldown: 3
+  domainShellPrefab: {fileID: 6863677621289781590, guid: abfc79e0d8b98e44598352b51d89c680, type: 3}
   Gravity: -12
 --- !u!136 &7702115389370023847
 CapsuleCollider:
